@@ -1,0 +1,14 @@
+NAME           CmdBar
+EXPORTS
+ODBG_Plugindata
+ODBG_Plugininit
+ODBG_Pluginmainloop
+ODBG_Pluginsaveudd
+ODBG_Pluginuddrecord
+ODBG_Pluginmenu
+ODBG_Pluginaction
+ODBG_Pluginshortcut
+ODBG_Pluginreset
+ODBG_Pluginclose
+ODBG_Plugindestroy
+__CPPdebugHook

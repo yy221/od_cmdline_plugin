@@ -19,7 +19,6 @@ modified by anonymouse
 #include <stdio.h>
 #include "plugin.h"
 
-
 int magic(void);
 extern char 			string[TEXTLEN];// defined in cmdexec.c
 char 				copy[TEXTLEN];	
@@ -54,38 +53,38 @@ int magic()
 
 	WriteProcessMemory(hDebugee, (LPVOID)(hMem), copy, strlen(copy), 0);
 
-	snprintf(buffer,(TEXTLEN-1),"%s","pushad");
+	_snprintf(buffer,(TEXTLEN-1),"%s","pushad");
 	len = Assemble(buffer, (ULONG_PTR)(hMem+500 + totallen), &model, 0, 0, error);
 	WriteProcessMemory(hDebugee, (LPVOID)(hMem+500 + totallen), model.code, len, 0);
 	totallen += len;
 
-	snprintf(buffer,(TEXTLEN-1),"%s","pushfd");
+	_snprintf(buffer,(TEXTLEN-1),"%s","pushfd");
 	len = Assemble(buffer, (ULONG_PTR)(hMem+500 + totallen), &model, 0, 0, error);
 	WriteProcessMemory(hDebugee, (LPVOID)(hMem+500 + totallen), model.code, len, 0);
 	totallen += len;			
 		
-	snprintf(buffer,(TEXTLEN-1),"push 0x%lx",*(ulong *)&hMem);
+	_snprintf(buffer,(TEXTLEN-1),"push 0x%lx",*(ulong *)&hMem);
 	len = Assemble(buffer, (ULONG_PTR)(hMem+500 + totallen), &model, 0, 0, error);
 	WriteProcessMemory(hDebugee, (LPVOID)(hMem+500 + totallen), model.code, len, 0);
 	totallen += len;
 
-	snprintf(buffer,(TEXTLEN-1),"call %s","LoadLibraryA");
+	_snprintf(buffer,(TEXTLEN-1),"call %s","LoadLibraryA");
 	len = Assemble(buffer, (ULONG_PTR)(hMem+500 + totallen), &model, 0, 0, error);
 	WriteProcessMemory(hDebugee, (LPVOID)(hMem+500 + totallen), model.code, len, 0);
 	totallen += len;
 		
 		
-	snprintf(buffer,(TEXTLEN-1),"%s","popfd");
+	_snprintf(buffer,(TEXTLEN-1),"%s","popfd");
 	len = Assemble(buffer, (ULONG_PTR)(hMem+500 + totallen), &model, 0, 0, error);
 	WriteProcessMemory(hDebugee, (LPVOID)(hMem+500 + totallen), model.code, len, 0);
 	totallen += len;
 
-	snprintf(buffer,(TEXTLEN-1),"%s","popad");
+	_snprintf(buffer,(TEXTLEN-1),"%s","popad");
 	len = Assemble(buffer, (ULONG_PTR)(hMem+500 + totallen), &model, 0, 0, error);
 	WriteProcessMemory(hDebugee, (LPVOID)(hMem+500 + totallen), model.code, len, 0);
 	totallen += len;
 
-	snprintf(buffer,(TEXTLEN-1),"jmp 0x%lx",eip);
+	_snprintf(buffer,(TEXTLEN-1),"jmp 0x%lx",eip);
 	len = Assemble(buffer, (ULONG_PTR)(hMem+500 + totallen), &model, 0, 0, error);
 	WriteProcessMemory(hDebugee, (LPVOID)(hMem+500 + totallen), model.code, len, 0);
 
@@ -220,8 +219,11 @@ all the slick looking typedefs declarations etc belongs to Alex
 #define MENU_ID_BASE		0xE000    // ollydbg global
 #define MENUS_PER_PLUGIN	0x40      // ollydbg global
 
-extern HWND			hwmain; // defined in command.c
-
+static HWND			hwmain; 
+void set_load_hwnd ( HWND h )
+{
+    hwmain = h;
+}
 
 typedef INT	(__cdecl *PODBG_PLUGIN_DATA)		(IN PCHAR ShortName);
 typedef INT	(__cdecl *PODBG_PLUGIN_INIT)		(int ollydbgversion,HWND hw,ulong *features);

@@ -153,8 +153,8 @@ for(i=0; i<strln+1; i++)
 
 for(i=0;i<j;i++)
 	{
-	snprintf(tempstring,(TEXTLEN-1),"%s",arr[i]);
-	if(strnicmp(tempstring,"hex",3)==0)
+	_snprintf(tempstring,(TEXTLEN-1),"%s",arr[i]);
+	if(_strnicmp(tempstring,"hex",3)==0)
 		{
 		strncpy(hexdump,tempstring,(TEXTLEN-1));
 
@@ -172,15 +172,15 @@ for(i=0;i<j;i++)
 			}
 		hexadr=strtol(splithexdump[1],0,16);
 		hexnum=strtol(splithexdump[2],0,16);
-		snprintf(tempdump,(TEXTLEN-1)," dump %X: ",hexadr);
+		_snprintf(tempdump,(TEXTLEN-1)," dump %X: ",hexadr);
 		strncat(tempdump1,tempdump,(TEXTLEN-1));
 		
 		for(p=0;p<hexnum;p++)
 			{
-			snprintf(tempexpr,(TEXTLEN-1),"byte ptr ds:[%x]",(hexadr+p));
+			_snprintf(tempexpr,(TEXTLEN-1),"byte ptr ds:[%x]",(hexadr+p));
 			n=Expression(&myres,tempexpr,0,0,NULL,0,0,Getcputhreadid());
 			if((!n<0) || (myres.type!=DEC_UNKNOWN))
-				snprintf(tempdump,(TEXTLEN-1),"%2x ",myres.u);
+				_snprintf(tempdump,(TEXTLEN-1),"%2x ",myres.u);
 				strncat(tempdump1,tempdump,(TEXTLEN-1));
 				
 			}
@@ -193,16 +193,16 @@ for(i=0;i<j;i++)
 		if((!n<0) || (myres.type!=DEC_UNKNOWN))
 		if(myres.type == DEC_STRING)
 			{
-			snprintf(tempstring,(TEXTLEN-1),"%s = %s ",arr[i],myres.value);
+			_snprintf(tempstring,(TEXTLEN-1),"%s = %s ",arr[i],myres.value);
 			}
 		else if(myres.type == DEC_UNICODE)
 			{
 			wcstombs(unistr,myres.wvalue,sizeof(myres.wvalue));
-			snprintf(tempstring,(TEXTLEN-1),"%s = %s ",arr[i],unistr);
+			_snprintf(tempstring,(TEXTLEN-1),"%s = %s ",arr[i],unistr);
 			}
 		else
 			{
-			snprintf(tempstring,(TEXTLEN-1),"%s = %x ",arr[i],myres.u);
+			_snprintf(tempstring,(TEXTLEN-1),"%s = %x ",arr[i],myres.u);
 			}
 		strncat(resstring,tempstring,(TEXTLEN-1));
 		}
