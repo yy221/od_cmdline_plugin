@@ -2,7 +2,7 @@
 command added Loaddll
 usage 
 replace the default cmdline plugin with new one
-alt+f1
+ctrl+f1
 type Loaddll "yourdll"
 if successfully loaded you can see a log entry "loaded "your dll"" in ollydbg log window
 and you can see your dll in memory window
@@ -192,7 +192,7 @@ return 0;
 /*
 updated with one more command
 loadplugin 
-usage alt+f1 type loadplugin "yourplugin"
+usage ctrl+f1 type loadplugin "yourplugin"
 this will load the plugin and register 
 should be use full under circumstances where you dont have 
 the requisite plugin and you dont want to copy 

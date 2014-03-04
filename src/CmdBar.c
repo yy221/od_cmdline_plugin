@@ -43,6 +43,19 @@
 #include "plugin.h"
 #include "cmdexec.h"
 
+void DbgLog ( const char* fmt, ... )
+{ 
+	char szBuffer[1024] = {0} ;
+
+	va_list arglist ;
+
+	va_start( arglist, fmt ) ;
+	vsprintf( szBuffer, fmt, arglist ) ;
+	va_end( arglist ) ;
+
+	OutputDebugString ( szBuffer ) ;
+} 
+
 #define PNAME   "CommandBar"
 #define PVERS   "3.20.110"
 #define ANAME   "Gigapede"
@@ -55,7 +68,7 @@
 
 //chliu added 2014/3/4 10:04:54
 //for compatibility work with StrongOD
-#define STRONGOD_HIGHT    25 
+#define STRONGOD_HIGHT    22 
 
 #define CMDBAR_SHOW      1
 #define CMDBAR_HIDE      0
@@ -202,12 +215,18 @@ void MoveMDIClientWindow(void)
 
   ToolbarShown = IsToolbarShown();
   GetClientRect(hwmain,&rc);
+  /*DbgLog ("main window:%x,(%d,%d):%d,%d\n", hwmain, 
+          rc.left,rc.top, 
+          rc.right - rc.left, rc.bottom - rc.top);*/
+
   x = 0;
   y = (ToolbarShown) ? TOOLBAR_HIGHT : 0;
   w = rc.right - rc.left;
-  h = rc.bottom-rc.top-STATUSBAR_HIGHT- STRONGOD_HIGHT - 
+  h = rc.bottom-rc.top-STATUSBAR_HIGHT - STRONGOD_HIGHT - 
       ((iShowCmdbar) ? CMDBAR_HIGHT : 0)-((ToolbarShown==TRUE) ? TOOLBAR_HIGHT : 0);
   MoveWindow(hwMDI,x,y,w,h,TRUE);
+
+  //DbgLog ("move MDI window:%x,(%d,%d):%d,%d\n", hwMDI, x,y,w,h);
 }
 
 void MoveCmdbarWindow(void)
@@ -216,11 +235,16 @@ void MoveCmdbarWindow(void)
   int x,y,w,h;
 
   GetClientRect(hwmain,&rc);
+  /*DbgLog ("main window:%x,(%d,%d):%d,%d\n", hwmain, 
+          rc.left,rc.top, 
+          rc.right - rc.left, rc.bottom - rc.top);*/
+
   x = 0;
   y = rc.bottom - STATUSBAR_HIGHT - CMDBAR_HIGHT - STRONGOD_HIGHT;
   w = rc.right - rc.left;
   h = CMDBAR_HIGHT;
   MoveWindow(hwcmd,x,y,w,h,TRUE);
+  DbgLog ("move cmd window:%x,(%d,%d):%d,%d\n", hwcmd, x,y,w,h);
 
   GetClientRect(hwcmd,&rc);
   x = 265;
@@ -378,6 +402,7 @@ LRESULT CALLBACK CmdbarWinProc(HWND hw,UINT msg,WPARAM wp,LPARAM lp) {
     InvalidateRect(hwmain,NULL,TRUE);
     break;
   case WM_SIZE:
+  case WM_WINDOWPOSCHANGED:
     MoveCmdbarWindow();
     MoveMDIClientWindow();
     //Broadcast(WM_USER_CHALL,0,0);
@@ -431,6 +456,9 @@ LRESULT CALLBACK OllySubclassProc(HWND hw,UINT msg,WPARAM wp,LPARAM lp)
   switch(msg) {
   case WM_SIZE:
     SendMessage(hwcmd,WM_SIZE,wp,lp);
+    break;
+  case WM_WINDOWPOSCHANGED: //chliu added 2014/03/04
+    SendMessage(hwcmd,WM_WINDOWPOSCHANGED,wp,lp);
     break;
   default:
     break;
@@ -544,7 +572,7 @@ extc int _export cdecl ODBG_Pluginmenu(int origin,char data[4096],void *item) {
   if(origin!=PM_MAIN)
     return 0;                          // No pop-up menus in OllyDbg's windows
   strcpy(data,
-         "0 &Show/Hide CommandBar\tAlt+F2|"
+         "0 &Show/Hide CommandBar\tCtrl+F1|"
          "1 Choose Bar font|"
          "62 &Help|"
          "63 "PNAME" v"PVERS
@@ -597,15 +625,21 @@ extc void _export cdecl ODBG_Pluginaction(int origin,int action,void *item) {
   };
 };
 
-// Command line window recognizes global shortcut Alt+F2.
+// Command line window recognizes global shortcut Ctrl+F1.
 extc int _export cdecl ODBG_Pluginshortcut(int origin,int ctrl,int alt,int shift,int key,void *item) {
-  if(ctrl==0 && alt==1 && shift==0 && key==VK_F2) {
+    // chliu modified 2014/3/4 12:14:47
+    // for StrongOD has use Alt+F1
+    //DbgLog ("cmdbar ODBG_Pluginshortcut %d, (%d,%d,%d,%x)\n", 
+    //    iShowCmdbar, ctrl, alt, shift, key );
+
+  if(ctrl==1 && alt==0 && shift==0 && key==VK_F1) {
     iShowCmdbar ^= 1;
     MoveCmdbarWindow();
     MoveMDIClientWindow();
     return 1;
   }
-  else if(ctrl==1 && alt==0 && shift==0 && (key=='d' || key=='D')) {
+  // else if(ctrl==1 && alt==0 && shift==0 && (key=='d' || key=='D')) {
+  else if(ctrl==1 && alt==0 && shift==0 && (key==VK_F12)) {
     if(iShowCmdbar) {
       SetFocus(hwbox);
     }

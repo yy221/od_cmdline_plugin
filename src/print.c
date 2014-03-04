@@ -99,12 +99,22 @@ replace the compiled dll in your plugin path
 
 USAGE
 
-alt+f1 to get the commandline plugin active 
+ctrl+f1 to get the commandline plugin active 
 type you expression like below in a comma seperated values
 print eax,string[403005],hex 403000 5,eax,string[403000],unicode[403040],byte ptr ds:[403000],eax,ecx,edx
 hit enter you will get the expressions logged to log window
 Log data, item 0
- Message=eax = 6 string[403005] = ng registers in ollydbg  dump 403000: 6c 6f 67 67 69 eax = 6 string[403000] = logging registers in ollydbg unicode[403040] = my dumb unicode string byte ptr ds:[403000] = 6c eax = 6 ecx = 8160f8a8 edx = fffffffa
+ Message=
+ eax = 6 
+ string[403005] = ng registers in ollydbg  
+ dump 403000: 6c 6f 67 67 69 
+ eax = 6 
+ string[403000] = logging registers in ollydbg 
+ unicode[403040] = my dumb unicode string 
+ byte ptr ds:[403000] = 6c 
+ eax = 6 
+ ecx = 8160f8a8 
+ edx = fffffffa
 
 or shift+f4 (log conditional breakpoint
 and enter your expression to log prepended with a . (dot) 

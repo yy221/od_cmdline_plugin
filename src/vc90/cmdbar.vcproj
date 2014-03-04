@@ -140,6 +140,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib LIBCMT.lib ollydbg.lib"
 				ShowProgress="0"
+				OutputFile="..\..\$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../"
 				IgnoreAllDefaultLibraries="true"
