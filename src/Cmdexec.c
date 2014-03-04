@@ -686,7 +686,7 @@ static t_command cmdlist[] = {
   { "SN",    "",   'N',               CtlDasm, "Search for Name(label) in current module"  },   // Search for Name(label) in current module
   { "SOB",   "",   'O',               CtlDasm, "Scan object files"                         },   // Scan OBJect files
   // Macro command
-  //{ "MAC",   "S",  0,                 LoadMac, "Execute Macro Command"                     },   // Execute Macro Command
+  { "MAC",   "S",  0,                 LoadMac, "Execute Macro Command"                     },   // Execute Macro Command
   { "OSC",   "S",  0,                 GoScrpt, "Execute OllyScript script"                 },   // Execute Macro Command
   { "PRINT", "S",  0,                 Print,   "Print multiple expressions"},
   { "LOADDLL", "S",  0,               Loaddll, "load dll"},

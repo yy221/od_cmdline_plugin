@@ -53,6 +53,10 @@
 #define STATUSBAR_HIGHT 20
 #define CMDBAR_HIGHT    25
 
+//chliu added 2014/3/4 10:04:54
+//for compatibility work with StrongOD
+#define STRONGOD_HIGHT    25 
+
 #define CMDBAR_SHOW      1
 #define CMDBAR_HIDE      0
 
@@ -201,7 +205,8 @@ void MoveMDIClientWindow(void)
   x = 0;
   y = (ToolbarShown) ? TOOLBAR_HIGHT : 0;
   w = rc.right - rc.left;
-  h = rc.bottom-rc.top-STATUSBAR_HIGHT-((iShowCmdbar) ? CMDBAR_HIGHT : 0)-((ToolbarShown==TRUE) ? TOOLBAR_HIGHT : 0);
+  h = rc.bottom-rc.top-STATUSBAR_HIGHT- STRONGOD_HIGHT - 
+      ((iShowCmdbar) ? CMDBAR_HIGHT : 0)-((ToolbarShown==TRUE) ? TOOLBAR_HIGHT : 0);
   MoveWindow(hwMDI,x,y,w,h,TRUE);
 }
 
@@ -212,7 +217,7 @@ void MoveCmdbarWindow(void)
 
   GetClientRect(hwmain,&rc);
   x = 0;
-  y = rc.bottom - STATUSBAR_HIGHT - CMDBAR_HIGHT;
+  y = rc.bottom - STATUSBAR_HIGHT - CMDBAR_HIGHT - STRONGOD_HIGHT;
   w = rc.right - rc.left;
   h = CMDBAR_HIGHT;
   MoveWindow(hwcmd,x,y,w,h,TRUE);
@@ -312,7 +317,7 @@ LRESULT CALLBACK CmdbarWinProc(HWND hw,UINT msg,WPARAM wp,LPARAM lp) {
     // Create edit control with history list, assign default OllyDbg font and
     // limit length of entered commands to OllyDbg-wide default.
     hwstc = CreateWindowEx(0,
-      "STATIC","Command :",
+      "STATIC","Command:",
       WS_CHILD|WS_VISIBLE|SS_SIMPLE|SS_GRAYFRAME,
       5,7,60,CMDBAR_HIGHT-7,
       hw,(HMENU)ID_HWSTC,hi,NULL);
@@ -340,7 +345,7 @@ LRESULT CALLBACK CmdbarWinProc(HWND hw,UINT msg,WPARAM wp,LPARAM lp) {
       //"STATIC","",
       "EDIT","",
       WS_CHILD|WS_VISIBLE|ES_READONLY,
-      265,3,rc.right-267,CMDBAR_HIGHT-6,
+      265,3,rc.right-267,CMDBAR_HIGHT-7,
       hw,(HMENU)ID_HWERR,hi,NULL);
     if(hFont) {
       SendMessage(hwerr,WM_SETFONT,(WPARAM)hFont,1);
@@ -393,9 +398,11 @@ HWND CreateCmdbarWindow(void) {
     // Create main command line window.
     GetClientRect(hwmain,&rc);
     hwcmd=CreateWindowEx(0,
-      CmdbarWinClass,"Command Bar",
+      CmdbarWinClass,"Command Bar2",
       WS_CHILD|WS_VISIBLE,
-      0,rc.bottom-STATUSBAR_HIGHT-CMDBAR_HIGHT,rc.right,CMDBAR_HIGHT,
+      0,
+      rc.bottom-STATUSBAR_HIGHT-CMDBAR_HIGHT - STRONGOD_HIGHT,
+      rc.right,CMDBAR_HIGHT,
       hwmain,NULL,(HANDLE)Plugingetvalue(VAL_HINST),NULL);
     if(hwcmd==NULL) {
       return NULL;      // Oops!..
