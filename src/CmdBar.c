@@ -544,7 +544,7 @@ extc int _export cdecl ODBG_Pluginmenu(int origin,char data[4096],void *item) {
   if(origin!=PM_MAIN)
     return 0;                          // No pop-up menus in OllyDbg's windows
   strcpy(data,
-         "0 &Show/Hide CommandBar\tAlt+F1|"
+         "0 &Show/Hide CommandBar\tAlt+F2|"
          "1 Choose Bar font|"
          "62 &Help|"
          "63 "PNAME" v"PVERS
@@ -597,9 +597,9 @@ extc void _export cdecl ODBG_Pluginaction(int origin,int action,void *item) {
   };
 };
 
-// Command line window recognizes global shortcut Alt+F1.
+// Command line window recognizes global shortcut Alt+F2.
 extc int _export cdecl ODBG_Pluginshortcut(int origin,int ctrl,int alt,int shift,int key,void *item) {
-  if(ctrl==0 && alt==1 && shift==0 && key==VK_F1) {
+  if(ctrl==0 && alt==1 && shift==0 && key==VK_F2) {
     iShowCmdbar ^= 1;
     MoveCmdbarWindow();
     MoveMDIClientWindow();
